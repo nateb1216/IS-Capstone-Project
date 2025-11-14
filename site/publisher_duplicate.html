@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Publisher – Duplicate</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header><h1>Publisher – Duplicate Message</h1></header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="publisher_valid.html">Valid</a>
+    <a href="publisher_invalid.html">Invalid</a>
+    <a href="help.html">Help</a>
+  </nav>
+
+  <p class="small">Paste a previously used <b>event_id</b> from a valid publish to trigger dedupe.</p>
+
+  <label>Existing event_id
+    <input id="eventId" placeholder="e.g., 123e4567-e89b-12d3-a456-426614174000">
+  </label>
+
+  <label>Order ID (same as original)
+    <input id="orderId" placeholder="ORD-2025-000123">
+  </label>
+
+  <div class="grid2" style="margin-top:8px;">
+    <button onclick="generateSame()">Generate JSON (same body)</button>
+    <button onclick="generateDifferent()">Generate JSON (different body)</button>
+  </div>
+  <button style="margin-top:8px;" onclick="copyJson()">Copy JSON</button>
+
+  <label class="small">Generated JSON</label>
+  <textarea id="output" rows="14" spellcheck="false"></textarea>
+
+  <script>
+    function nowIso(){ return new Date().toISOString(); }
+    function generateSame(){
+      const eid=document.getElementById('eventId').value.trim();
+      const oid=document.getElementById('orderId').value.trim()||"ORD-2025-000123";
+      if(!eid){ alert('Enter an existing event_id.'); return; }
+      const payload={
+        event_id:eid, event_type:"OrderCreated", order_id:oid, created_at:nowIso(),
+        requested_by:{name:"Duplicate Test", email:"duplicate@test.edu"},
+        school:"Your School", department:"Dept",
+        items:[{sku:"DUP-1", name:"Duplicate Test Item", qty:1, unit:"each", unit_price:0.01}],
+        notes:"Same body duplicate.", status:"NEW"
+      };
+      document.getElementById('output').value = JSON.stringify(payload, null, 2);
+    }
+    function generateDifferent(){
+      const eid=document.getElementById('eventId').value.trim();
+      const oid=document.getElementById('orderId').value.trim()||"ORD-2025-000123";
+      if(!eid){ alert('Enter an existing event_id.'); return; }
+      const payload={
+        event_id:eid, event_type:"OrderCreated", order_id:oid, created_at:nowIso(),
+        requested_by:{name:"Duplicate Test (new body)", email:"duplicate2@test.edu"},
+        school:"Your School", department:"Dept",
+        items:[{sku:"DUP-2", name:"Different Body Item", qty:2, unit:"each", unit_price:0.02}],
+        notes:"Different body, same event_id.", status:"NEW"
+      };
+      document.getElementById('output').value = JSON.stringify(payload, null, 2);
+    }
+    function copyJson(){
+      const t=document.getElementById('output').value;
+      if(!t){ alert('Generate JSON first.'); return; }
+      navigator.clipboard.writeText(t).then(()=>alert('JSON copied. Paste in Pub/Sub → Publish message.'));
+    }
+  </script>
+</body>
+</html>
