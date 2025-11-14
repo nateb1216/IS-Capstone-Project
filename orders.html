@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>School Supply Orders</title>
+  <style>
+    body{
+        font-family:Arial, sans-serif; 
+        background-color:#f8f9fa;
+        margin: 0;
+        padding:20px;
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top:20px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1)
+
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f1f1f1;
+    }
+    
+    .duplicate {
+        background-color: #ffe6e6;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .status-NEW{background:#0ea5e9;}
+    .status-APPROVED{background:#16a34a;}
+    .status-BACKORDER{background:#f59e0b;}
+    .status-CANCELLED{background:#ef4444;}
+
+    </style>
+    </head>
+    <body>
+        <h1>School Supply Orders</h1>
+  <form method="get" style="margin-bottom:1rem;">
+    <select name="status">
+      <option value="">All statuses</option>
+      <option>NEW</option>
+      <option>APPROVED</option>
+      <option>BACKORDER</option>
+      <option>CANCELLED</option>
+      <option>FULFILLED</option>
+    </select>
+    <input type="text" name="q" placeholder="Search order_id or requester..." />
+    <button type="submit">Filter</button>
+    <a href="../templates/orders.html">Clear</a>
+  </form>
+
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Teacher/Faculty</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                    <th>Duplicate?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr class="{%if order.is_duplicate %}duplicate{% endif %}">
+                    <td><a href="/orders/{{ order.order_id }}">{{ order.order_id }}</a></td>
+                    <td>{{ order.teacher_name }}</td>
+                    <td>{{ order.created_at.strftime('%Y-%m-%d') if order.created_at else ''}}</td>
+                    <td>{{ order.status }}</td>
+                    <td>{% if order.is_duplicate %}Yes{% else %}No{% endif %}</td>
+
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align:center;">No orders found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
