@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Publisher – Invalid Payloads</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header><h1>Publisher – Invalid Payloads</h1></header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="publisher_valid.html">Valid</a>
+    <a href="publisher_duplicate.html">Duplicate</a>
+    <a href="help.html">Help</a>
+  </nav>
+
+  <p class="small">Use these to test error handling (DLQ/parking or validation failures).</p>
+
+  <section class="card">
+    <h2>Missing Fields (no items)</h2>
+    <div class="grid2">
+      <label>Teacher Name <input id="mName" placeholder="Mr. Lee"></label>
+      <label>Teacher Email <input id="mEmail" placeholder="mlee@school.edu"></label>
+    </div>
+    <button onclick="genMissing()">Generate JSON (missing items)</button>
+  </section>
+
+  <section class="card">
+    <h2>Malformed JSON (intentionally broken)</h2>
+    <button onclick="genMalformed()">Generate Malformed</button>
+  </section>
+
+  <button style="margin-top:8px;" onclick="copyJson()">Copy JSON</button>
+
+  <label class="small">Generated Output</label>
+  <textarea id="output" rows="14" spellcheck="false"></textarea>
+
+  <script>
+    function uuidv4(){return'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);});}
+    function nowIso(){ return new Date().toISOString(); }
+
+    function genMissing(){
+      const payload={
+        event_id:"MISSING-"+uuidv4(),
+        event_type:"OrderCreated",
+        order_id:"ORD-"+new Date().getFullYear()+"-MISSING",
+        created_at:nowIso(),
+        requested_by:{name:document.getElementById('mName').value||"Mr. Lee",email:document.getElementById('mEmail').value||"mlee@school.edu"},
+        /* items intentionally omitted */
+        status:"NEW"
+      };
+      document.getElementById('output').value = JSON.stringify(payload, null, 2);
+    }
+
+    function genMalformed(){
+      const bad='{ "event_id": "INVALID-001", "event_type": "OrderCreated", "order_id": "ORD-XXXX", "items": [ "broken json ..." ';
+      document.getElementById('output').value = bad; // not valid JSON on purpose
+    }
+
+    function copyJson(){
+      const t=document.getElementById('output').value;
+      if(!t){ alert('Generate something first.'); return; }
+      navigator.clipboard.writeText(t).then(()=>alert('Copied. Paste in Pub/Sub → Publish message.'));
+    }
+  </script>
+</body>
+</html>
