@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Help – Publisher</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header><h1>Help</h1></header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="publisher_valid.html">Valid</a>
+    <a href="publisher_duplicate.html">Duplicate</a>
+    <a href="publisher_invalid.html">Invalid</a>
+  </nav>
+
+  <section class="card">
+    <h2>Publish into Google Cloud Pub/Sub</h2>
+    <ol>
+      <li>Open a page (Valid / Duplicate / Invalid).</li>
+      <li><b>Generate JSON</b> → <b>Copy JSON</b>.</li>
+      <li>Go to <b>Console → Pub/Sub → Topics → YOUR TOPIC → Publish message</b>.</li>
+      <li>Paste JSON in <b>Message body</b> → <b>Publish</b>.</li>
+    </ol>
+    <p><b>Tip:</b> For valid JSON, you can add attribute <code>content_type=application/json</code> (optional).</p>
+  </section>
+
+  <section class="card">
+    <h2>Message Rules</h2>
+    <ul>
+      <li>Use a unique <code>event_id</code> for each new event (dedup key).</li>
+      <li><code>order_id</code> stays the same for the same order.</li>
+      <li><code>OrderCreated</code> includes order info and an <code>items</code> array.</li>
+    </ul>
+  </section>
+</body>
+</html>
