@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Order Details - {{ 'order.order_id'] }}</title>
+  <title>Order Details - {{ order.order_id'] }}</title>
   <style>
 
     body {
@@ -110,7 +110,7 @@
                     <td>{{ event.event_id }}</td>
                     <td>{{ event.event_type }}</td>
                     <td>{{ event.timestamp.strftime('%Y-%m-%d %H:%M:%S')if event.timestamp else '' }}</td>
-                    <td>{% if event.is_duplicate %}Yes{% else %}No{% endif %}</td>
+                    <td>{{ 'Yes' if event.is_duplicate else 'No' }}</td>
                     </tr>
 
                     {% else %}
@@ -127,4 +127,5 @@
     </div>
 </body>
 </html>
+
 
