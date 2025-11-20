@@ -84,7 +84,7 @@
             <tbody>
                 {% for order in orders %}
                 <tr class="{%if order.is_duplicate %}duplicate{% endif %}">
-                    <td><a href="/orders/{{ order.order_id }}">{{ order.order_id }}</a></td>
+                    <td><a href="{{ url_for('order_detail', order_id=order.order_id) }}"</a></td>
                     <td>{{ order.teacher_name }}</td>
                     <td>{{ order.created_at.strftime('%Y-%m-%d') if order.created_at else ''}}</td>
                     <td>{{ order.status }}</td>
@@ -101,3 +101,4 @@
 </body>
 
 </html>
+
